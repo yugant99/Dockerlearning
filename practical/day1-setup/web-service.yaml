@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web        # Matches pods with label app=web
+  type: NodePort
+  ports:
+  - port: 80        # Service port
+    targetPort: 80  # Container port
+    nodePort: 30080

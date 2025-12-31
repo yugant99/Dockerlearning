@@ -1,0 +1,86 @@
+# API Deployment
+# Serves predictions with proper health checks and resources
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-api
+  namespace: ml-platform
+  labels:
+    app: ml-platform
+    component: api
+spec:
+  replicas: 2  # Start with 2 replicas for HA
+  
+  selector:
+    matchLabels:
+      app: ml-api
+  
+  # Rolling update strategy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  
+  template:
+    metadata:
+      labels:
+        app: ml-api
+        component: api
+    spec:
+      containers:
+      - name: api
+        image: ml-api:v1
+        imagePullPolicy: Never  # Use local image (minikube)
+        
+        ports:
+        - containerPort: 8000
+          name: http
+        
+        # Configuration from ConfigMap
+        envFrom:
+        - configMapRef:
+            name: ml-config
+        
+        # Resource limits (conservative for 8GB Mac)
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        
+        # Liveness Probe: Is the container alive?
+        # Failed = container restarted
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        # Readiness Probe: Is the container ready for traffic?
+        # Failed = removed from Service endpoints
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        # Mount model storage (read-only for serving)
+        volumeMounts:
+        - name: model-storage
+          mountPath: /models
+          readOnly: true
+      
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-pvc
+

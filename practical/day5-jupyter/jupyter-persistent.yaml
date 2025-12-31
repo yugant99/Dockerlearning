@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jupyter-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jupyter-persistent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyter-persistent
+  template:
+    metadata:
+      labels:
+        app: jupyter-persistent
+    spec:
+      containers:
+      - name: jupyter
+        image: jupyter/datascience-notebook:latest
+        ports:
+        - containerPort: 8888
+        env:
+        - name: JUPYTER_TOKEN
+          value: "datatoken123"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: notebooks
+          mountPath: /home/jovyan/work
+      volumes:
+      - name: notebooks
+        persistentVolumeClaim:
+          claimName: jupyter-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyter-persistent-svc
+spec:
+  selector:
+    app: jupyter-persistent
+  type: NodePort
+  ports:
+  - port: 8888
+    targetPort: 8888
+    nodePort: 30889

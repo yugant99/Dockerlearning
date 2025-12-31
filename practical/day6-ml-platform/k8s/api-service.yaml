@@ -1,0 +1,25 @@
+# API Service
+# Exposes the API deployment, load balances across replicas
+apiVersion: v1
+kind: Service
+metadata:
+  name: ml-api-service
+  namespace: ml-platform
+  labels:
+    app: ml-platform
+    component: api
+spec:
+  # NodePort for minikube access
+  # In GKE, you'd use LoadBalancer
+  type: NodePort
+  
+  selector:
+    app: ml-api
+  
+  ports:
+  - name: http
+    port: 8000        # Service port
+    targetPort: 8000  # Container port
+    nodePort: 30800   # External port (30000-32767)
+    protocol: TCP
+

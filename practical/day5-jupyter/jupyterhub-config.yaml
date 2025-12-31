@@ -1,0 +1,33 @@
+proxy:
+  secretToken: "3ea60010f87c8c3937d7a8b403a45be6b1363d9f6d059c5f8cfd5f21a875d4de"
+  service:
+    type: NodePort
+    nodePorts:
+      http: 30080
+      
+singleuser:
+  image:
+    name: jupyter/scipy-notebook
+    tag: latest
+  memory:
+    limit: 1G
+    guarantee: 512M
+  cpu:
+    limit: 1
+    guarantee: 0.5
+  storage:
+    type: dynamic
+    capacity: 1Gi
+    
+hub:
+  config:
+    Authenticator:
+      admin_users:
+        - admin
+      allowed_users:
+        - user1
+        - user2
+    DummyAuthenticator:
+      password: password123
+    JupyterHub:
+      authenticator_class: dummy

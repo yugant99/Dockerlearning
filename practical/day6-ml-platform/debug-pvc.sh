@@ -1,0 +1,1 @@
+kubectl run debug-pvc --image=busybox -n ml-platform --rm -it --restart=Never --overrides='{"spec":{"volumes":[{"name":"model-storage","persistentVolumeClaim":{"claimName":"model-pvc"}}],"containers":[{"name":"debug","image":"busybox","volumeMounts":[{"name":"model-storage","mountPath":"/models"}],"stdin":true,"tty":true}]}}'

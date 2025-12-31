@@ -1,0 +1,68 @@
+# CronJob for Scheduled Retraining
+# Runs weekly on Sunday at 2 AM
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: model-retrain
+  namespace: ml-platform
+  labels:
+    app: ml-platform
+    component: training
+spec:
+  # Schedule: At 2:00 AM every Sunday
+  # ┌───────────── minute (0)
+  # │ ┌───────────── hour (2)
+  # │ │ ┌───────────── day of month (*)
+  # │ │ │ ┌───────────── month (*)
+  # │ │ │ │ ┌───────────── day of week (0 = Sunday)
+  schedule: "0 2 * * 0"
+  
+  # Don't start new job if previous still running
+  concurrencyPolicy: Forbid
+  
+  # Keep last 3 successful and 2 failed jobs for debugging
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 2
+  
+  # If job doesn't start within 5 minutes of schedule, skip it
+  startingDeadlineSeconds: 300
+  
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 900  # 15 min max
+      
+      template:
+        metadata:
+          labels:
+            app: ml-platform
+            component: retrain
+        spec:
+          restartPolicy: OnFailure
+          
+          containers:
+          - name: trainer
+            image: ml-training:v1
+            imagePullPolicy: Never
+            
+            envFrom:
+            - configMapRef:
+                name: ml-config
+            
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "250m"
+              limits:
+                memory: "512Mi"
+                cpu: "1000m"
+            
+            volumeMounts:
+            - name: model-storage
+              mountPath: /models
+          
+          volumes:
+          - name: model-storage
+            persistentVolumeClaim:
+              claimName: model-pvc
+

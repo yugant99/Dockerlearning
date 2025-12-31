@@ -1,0 +1,18 @@
+# PersistentVolumeClaim for Model Storage
+# Stores trained model artifacts between training and serving
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: model-pvc
+  namespace: ml-platform
+  labels:
+    app: ml-platform
+    component: storage
+spec:
+  accessModes:
+    - ReadWriteOnce  # Single node access (sufficient for minikube)
+  resources:
+    requests:
+      storage: 1Gi   # 1GB is plenty for sklearn models
+  # storageClassName: standard  # Uncomment for GKE
+

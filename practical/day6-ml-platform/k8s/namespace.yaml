@@ -1,0 +1,10 @@
+# Namespace for ML Platform
+# Isolates all resources, makes cleanup easy
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ml-platform
+  labels:
+    project: ml-platform
+    purpose: interview-demo
+

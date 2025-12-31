@@ -1,0 +1,57 @@
+# Training Job
+# Runs model training once, saves model to PVC
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-training
+  namespace: ml-platform
+  labels:
+    app: ml-platform
+    component: training
+spec:
+  # Retry up to 2 times on failure
+  backoffLimit: 2
+  
+  # Kill job if it runs longer than 10 minutes
+  activeDeadlineSeconds: 600
+  
+  # Clean up completed pods after 1 hour
+  ttlSecondsAfterFinished: 3600
+  
+  template:
+    metadata:
+      labels:
+        app: ml-platform
+        component: training
+    spec:
+      restartPolicy: Never  # Don't restart, create new pod on failure
+      
+      containers:
+      - name: trainer
+        image: ml-training:v1
+        imagePullPolicy: Never  # Use local image (minikube)
+        
+        # Get config from ConfigMap
+        envFrom:
+        - configMapRef:
+            name: ml-config
+        
+        # Resource limits (conservative for 8GB Mac)
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "1000m"
+        
+        # Mount PVC for model output
+        volumeMounts:
+        - name: model-storage
+          mountPath: /models
+      
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-pvc
+

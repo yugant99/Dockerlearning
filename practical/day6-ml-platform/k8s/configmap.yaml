@@ -1,0 +1,22 @@
+# ConfigMap for ML Platform Configuration
+# Externalizes config from containers - change without rebuild
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ml-config
+  namespace: ml-platform
+  labels:
+    app: ml-platform
+data:
+  # Model configuration
+  MODEL_PATH: "/models/model.joblib"
+  MODEL_VERSION: "v1"
+  
+  # Training hyperparameters
+  N_ESTIMATORS: "100"
+  MAX_DEPTH: "10"
+  N_SAMPLES: "1000"
+  
+  # API configuration
+  LOG_LEVEL: "INFO"
+
