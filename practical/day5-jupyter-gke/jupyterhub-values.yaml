@@ -1,5 +1,5 @@
 # JupyterHub configuration for GKE
-# Replace YOUR_PROJECT and YOUR_DOMAIN with actual values
+# Replace YOUR_PROJECT with your actual GCP project ID
 
 hub:
   image:
@@ -16,10 +16,19 @@ hub:
     JupyterHub:
       authenticator_class: oauthenticator.GoogleOAuthenticator
       GoogleOAuthenticator:
+        # Get these from Google Cloud Console → APIs & Services → Credentials
         client_id: "your-google-oauth-client-id"  # TODO: Replace with actual OAuth client ID
         client_secret: "your-google-oauth-client-secret"  # TODO: Replace with actual OAuth client secret
-        oauth_callback_url: "https://your-domain/hub/oauth_callback"  # TODO: Replace with actual domain
-        hosted_domain: "your-domain.com"  # TODO: Replace with your domain (optional)
+
+        # OAuth callback URL - must match exactly what you added in Google Console
+        # Options:
+        # - Local testing: "http://localhost:8000/hub/oauth_callback"
+        # - ngrok: "https://your-ngrok-url.ngrok.io/hub/oauth_callback"
+        # - Domain: "https://your-domain.com/hub/oauth_callback"
+        oauth_callback_url: "https://your-ngrok-url.ngrok.io/hub/oauth_callback"  # TODO: Replace with your URL
+
+        # Optional: Restrict login to specific domain
+        hosted_domain: "your-domain.com"  # TODO: Replace with your domain or remove
         login_service: "Google"
 
 proxy:

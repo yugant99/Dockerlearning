@@ -140,24 +140,115 @@ ingress:
 
 ### 2.2 Set Up Google OAuth (Required for Authentication)
 
-**Step 1: Create Google OAuth Credentials**
+#### OAuth Callback URL Options
+
+**Google OAuth requires valid domains for security.** Here are your options:
+
+**Option A: Local Development (Simplest)**
+- Use `http://localhost:8000/hub/oauth_callback`
+- Only works for local JupyterHub testing
+- Cannot be used with GKE LoadBalancer
+
+**Option B: Real Domain (Production)**
+- Use `https://your-domain.com/hub/oauth_callback`
+- Requires owning a domain (buy from Namecheap, GoDaddy, etc.)
+- Set up DNS to point to your GKE LoadBalancer IP
+
+**Option C: Temporary Public URL (Testing)**
+- Use ngrok: `https://abc123.ngrok.io/hub/oauth_callback`
+- Free tier available, easy setup
+
+**Option D: GCP Domain (Recommended)**
+- Use Cloud DNS + your GCP project domain
+- Professional setup for demos
+
+#### Step 1: Choose Your OAuth Callback Strategy
+
+For **Day 5 learning**, use **Option A** (localhost) for local testing, or **Option C** (ngrok) for GKE testing.
+
+**Step 2: Create Google OAuth Credentials**
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Navigate to **APIs & Services** → **Credentials**
 3. Click **+ CREATE CREDENTIALS** → **OAuth client ID**
 4. Choose **Web application**
-5. Add authorized redirect URIs:
-   - `https://your-domain/hub/oauth_callback`
-   - `http://localhost:8000/hub/oauth_callback` (for local testing)
+5. Add authorized redirect URIs based on your choice:
+
+   **For Local Testing (Option A):**
+   - `http://localhost:8000/hub/oauth_callback`
+
+   **For ngrok (Option C):**
+   - First run: `ngrok http 80` (get your URL like `https://abc123.ngrok.io`)
+   - Then add: `https://abc123.ngrok.io/hub/oauth_callback`
+
+   **For Real Domain (Option B):**
+   - `https://your-domain.com/hub/oauth_callback`
 
 **Step 2: Update values.yaml**
 
-Replace in `jupyterhub-values.yaml`:
-- `client_id`: Your OAuth client ID
-- `client_secret`: Your OAuth client secret
-- `oauth_callback_url`: Your domain callback URL
+Update `jupyterhub-values.yaml` with your OAuth credentials:
 
-### 2.3 Configure Custom Data Science Environment
+```yaml
+hub:
+  config:
+    JupyterHub:
+      GoogleOAuthenticator:
+        client_id: "your-actual-client-id.apps.googleusercontent.com"  # From Google Console
+        client_secret: "your-actual-client-secret"                      # From Google Console
+        oauth_callback_url: "http://localhost:8000/hub/oauth_callback" # For local testing
+        # OR for ngrok: "https://your-ngrok-url.ngrok.io/hub/oauth_callback"
+        # OR for domain: "https://your-domain.com/hub/oauth_callback"
+```
+
+**Important:** The `oauth_callback_url` must exactly match one of the authorized redirect URIs you added in Google Console.
+
+### 2.3 Quick OAuth Setup with ngrok (Recommended for Testing)
+
+**Step 1: Install ngrok**
+```bash
+# Download from https://ngrok.com/download
+# Or install via Homebrew
+brew install ngrok
+
+# Sign up for free account and get auth token
+ngrok config add-authtoken YOUR_AUTH_TOKEN
+```
+
+**Step 2: Start ngrok tunnel**
+```bash
+# Tunnel to port 80 (where JupyterHub proxy will run)
+ngrok http 80
+
+# You'll see output like:
+# Forwarding    https://abc123.ngrok.io -> http://localhost:80
+```
+
+**Step 3: Add ngrok URL to Google OAuth**
+- Go back to Google Console → APIs & Services → Credentials
+- Edit your OAuth client
+- Add authorized redirect URI: `https://abc123.ngrok.io/hub/oauth_callback`
+
+**Step 4: Update JupyterHub config**
+```yaml
+# In jupyterhub-values.yaml
+hub:
+  config:
+    JupyterHub:
+      GoogleOAuthenticator:
+        oauth_callback_url: "https://abc123.ngrok.io/hub/oauth_callback"
+```
+
+**Step 5: Deploy and Access**
+```bash
+# Deploy JupyterHub
+helm upgrade --install jupyterhub jupyterhub/jupyterhub \
+  --namespace jupyterhub \
+  --values jupyterhub-values.yaml
+
+# Access via ngrok URL: https://abc123.ngrok.io
+```
+
+### 2.4 Configure Custom Data Science Environment
 
 Create `singleuser-profileList.yaml`:
 

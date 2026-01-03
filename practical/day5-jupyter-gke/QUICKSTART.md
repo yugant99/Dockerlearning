@@ -16,11 +16,28 @@ cd practical/day5-jupyter-gke
 ./setup-jupyterhub.sh
 ```
 
-## Step 2: Configure OAuth (2 minutes)
+## Step 2: Configure OAuth (5 minutes)
 
+**Option A: ngrok (Recommended for Testing)**
+```bash
+# Install ngrok
+brew install ngrok
+ngrok config add-authtoken YOUR_AUTH_TOKEN
+
+# Start tunnel
+ngrok http 80
+# Copy the https://abc123.ngrok.io URL
+```
+
+**Option B: Localhost (For local testing only)**
+- Use `http://localhost:8000/hub/oauth_callback`
+
+**Google Console Setup:**
 1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
 2. Create OAuth 2.0 Client ID (Web application)
-3. Add authorized redirect URI: `https://your-domain/hub/oauth_callback`
+3. Add authorized redirect URI:
+   - For ngrok: `https://abc123.ngrok.io/hub/oauth_callback`
+   - For localhost: `http://localhost:8000/hub/oauth_callback`
 4. Update `jupyterhub-values.yaml`:
    ```yaml
    hub:
@@ -29,7 +46,7 @@ cd practical/day5-jupyter-gke
          GoogleOAuthenticator:
            client_id: "your-client-id.apps.googleusercontent.com"
            client_secret: "your-client-secret"
-           oauth_callback_url: "https://your-domain/hub/oauth_callback"
+           oauth_callback_url: "https://abc123.ngrok.io/hub/oauth_callback"  # Use your ngrok URL
    ```
 
 ## Step 3: Deploy (10 minutes)
