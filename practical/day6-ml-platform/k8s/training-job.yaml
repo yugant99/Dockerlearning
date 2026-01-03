@@ -12,8 +12,8 @@ spec:
   # Retry up to 2 times on failure
   backoffLimit: 2
   
-  # Kill job if it runs longer than 10 minutes
-  activeDeadlineSeconds: 600
+  # Kill job if it runs longer than 30 minutes (training takes time)
+  activeDeadlineSeconds: 1800
   
   # Clean up completed pods after 1 hour
   ttlSecondsAfterFinished: 3600
@@ -28,8 +28,8 @@ spec:
       
       containers:
       - name: trainer
-        image: ml-training:v1
-        imagePullPolicy: Never  # Use local image (minikube)
+        image: gcr.io/scenic-genre-455202-u3/ml-training:v1
+        imagePullPolicy: IfNotPresent  # Pull from GCR for GKE
         
         # Get config from ConfigMap
         envFrom:

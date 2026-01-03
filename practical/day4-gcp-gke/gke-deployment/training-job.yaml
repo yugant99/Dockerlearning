@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-training
+  namespace: ml-platform
+spec:
+  template:
+    spec:
+      serviceAccountName: default  # Will be updated with Workload Identity later
+      containers:
+      - name: trainer
+        # Replace YOUR_PROJECT with your actual GCP project ID
+        image: gcr.io/YOUR_PROJECT/ml-training:v1
+        envFrom:
+        - configMapRef:
+            name: ml-config
+        volumeMounts:
+        - name: model-storage
+          mountPath: /models
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "1000m"
+            memory: "2Gi"
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-pvc
+      restartPolicy: Never

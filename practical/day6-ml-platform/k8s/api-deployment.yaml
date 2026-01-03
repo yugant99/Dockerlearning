@@ -30,8 +30,8 @@ spec:
     spec:
       containers:
       - name: api
-        image: ml-api:v1
-        imagePullPolicy: Never  # Use local image (minikube)
+        image: gcr.io/scenic-genre-455202-u3/ml-api:v1
+        imagePullPolicy: IfNotPresent  # Pull from GCR for GKE
         
         ports:
         - containerPort: 8000

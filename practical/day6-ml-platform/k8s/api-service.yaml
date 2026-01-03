@@ -9,9 +9,8 @@ metadata:
     app: ml-platform
     component: api
 spec:
-  # NodePort for minikube access
-  # In GKE, you'd use LoadBalancer
-  type: NodePort
+  # LoadBalancer for GKE external access
+  type: LoadBalancer
   
   selector:
     app: ml-api
@@ -20,6 +19,5 @@ spec:
   - name: http
     port: 8000        # Service port
     targetPort: 8000  # Container port
-    nodePort: 30800   # External port (30000-32767)
     protocol: TCP
 
