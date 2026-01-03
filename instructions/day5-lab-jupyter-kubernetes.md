@@ -22,7 +22,7 @@ mkdir -p day5-jupyter && cd day5-jupyter
 
 ---
 
-## Part 1: Simple Single Jupyter Notebook
+## Part 1: Simple Single J upyter Notebook
 
 ### Step 1.1: Deploy Basic Jupyter
 

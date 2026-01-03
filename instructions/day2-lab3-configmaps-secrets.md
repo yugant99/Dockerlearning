@@ -136,7 +136,7 @@ EOF
 ### Step 3.2: Create ConfigMap from File
 
 ```bash
-kubectl create configmap file-config --from-file=app.properties
+kubectl create configmap file-config --from-file=app.properties # app.properties is right up man 
 ```
 
 ### Step 3.3: View It

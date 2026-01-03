@@ -229,7 +229,7 @@ curl $SERVICE_URL/health
 curl $SERVICE_URL/ready
 
 # Make a prediction!
-curl -X POST "$SERVICE_URL/predict" \
+curl -X POST "http://127.0.0.1:56121/predict" \
   -H "Content-Type: application/json" \
   -d '{"values": [100, 105, 103, 108, 110]}'
 ```
@@ -331,7 +331,7 @@ kubectl get cronjobs -n ml-platform
 
 # 5. Test API
 SERVICE_URL=$(minikube service ml-api-service -n ml-platform --url)
-curl -X POST "$SERVICE_URL/predict" \
+curl -X POST "http://127.0.0.1:56121/predict" \
   -H "Content-Type: application/json" \
   -d '{"values": [100, 105, 103, 108, 110]}'
 ```

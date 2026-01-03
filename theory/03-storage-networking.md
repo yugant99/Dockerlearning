@@ -276,7 +276,7 @@ spec:
   ports:
   - port: 80
     targetPort: 8080
-    nodePort: 30080    # External port (30000-32767)
+    nodePort: 30080    #   External port (30000-32767)
 ```
 
 ```

@@ -106,6 +106,7 @@
 
 ```yaml
 # Create PVC
+
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -324,7 +325,7 @@ ML apps: Model must be **loaded and ready**
 ```python
 # main.py
 model = None
-model_loaded = False
+model_loaded = False`
 
 @app.on_event("startup")
 async def load_model():
@@ -523,7 +524,7 @@ startupProbe:
   httpGet:
     path: /ready
   failureThreshold: 30
-  periodSeconds: 10        # 5 minutes to start
+  periodSeconds: 10        # 5 minutes to start\
 ```
 
 ### Issue: Cold Starts After Scale-Down

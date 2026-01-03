@@ -154,7 +154,7 @@ gsutil mb gs://my-bucket
 
 # Copy files
 gsutil cp file.txt gs://my-bucket/
-gsutil cp gs://my-bucket/file.txt ./
+gsutil cp  gs://my-bucket/file.txt ./
 
 # List contents
 gsutil ls gs://my-bucket/

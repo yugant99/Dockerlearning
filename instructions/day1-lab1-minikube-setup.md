@@ -190,7 +190,7 @@ kubectl logs hello-nginx-xxxxx-xxxxx
 ### Step 5.3: Execute Command Inside Pod
 
 ```bash
-kubectl exec -it hello-nginx-xxxxx-xxxxx -- /bin/bash
+kubectl exec -it hello-nginx-xxxxx-xxxxx -- /bin/sh
 ```
 
 **You're now INSIDE the container!** Try:

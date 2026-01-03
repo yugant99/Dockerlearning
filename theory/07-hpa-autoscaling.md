@@ -45,7 +45,7 @@ kubectl get pods -n kube-system | grep metrics
 # Check metrics working
 kubectl top nodes
 kubectl top pods
-```
+``` 
 
 ### 2. HPA Controller
 Part of kube-controller-manager. Queries metrics, calculates desired replicas.
