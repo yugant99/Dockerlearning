@@ -1,0 +1,31 @@
+singleuser:
+  profileList:
+    - display_name: "Data Science Environment"
+      description: "Full data science stack with ML libraries"
+      default: true
+      kubespawner_override:
+        image: gcr.io/YOUR_PROJECT/jupyter-datascience:v1  # TODO: Replace YOUR_PROJECT
+        cpu_limit: 2
+        mem_limit: "4Gi"
+        cpu_guarantee: 0.5
+        mem_guarantee: "1Gi"
+
+    - display_name: "Basic Python Environment"
+      description: "Lightweight Python environment for simple tasks"
+      kubespawner_override:
+        image: jupyter/base-notebook:2024-08-17
+        cpu_limit: 1
+        mem_limit: "2Gi"
+        cpu_guarantee: 0.2
+        mem_guarantee: "512Mi"
+
+    - display_name: "GPU Environment (Experimental)"
+      description: "GPU-enabled environment for deep learning (requires GPU node pool)"
+      kubespawner_override:
+        image: gcr.io/YOUR_PROJECT/jupyter-gpu:v1  # TODO: Replace YOUR_PROJECT
+        cpu_limit: 4
+        mem_limit: "8Gi"
+        cpu_guarantee: 1
+        mem_guarantee: "2Gi"
+        extra_resource_limits:
+          nvidia.com/gpu: "1"

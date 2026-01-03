@@ -1,0 +1,68 @@
+# JupyterHub configuration for GKE
+# Replace YOUR_PROJECT and YOUR_DOMAIN with actual values
+
+hub:
+  image:
+    name: jupyterhub/k8s-hub
+    tag: "4.1.5"
+  db:
+    type: sqlite-pvc
+    pvc:
+      storageClassName: standard-rwo  # GKE optimized storage
+      accessModes:
+        - ReadWriteOnce
+      storage: 1Gi
+  config:
+    JupyterHub:
+      authenticator_class: oauthenticator.GoogleOAuthenticator
+      GoogleOAuthenticator:
+        client_id: "your-google-oauth-client-id"  # TODO: Replace with actual OAuth client ID
+        client_secret: "your-google-oauth-client-secret"  # TODO: Replace with actual OAuth client secret
+        oauth_callback_url: "https://your-domain/hub/oauth_callback"  # TODO: Replace with actual domain
+        hosted_domain: "your-domain.com"  # TODO: Replace with your domain (optional)
+        login_service: "Google"
+
+proxy:
+  service:
+    type: LoadBalancer  # GKE LoadBalancer for external access
+  chp:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
+singleuser:
+  image:
+    name: jupyter/scipy-notebook
+    tag: "2024-08-17"
+  cpu:
+    limit: 2
+    guarantee: 0.5
+  memory:
+    limit: "4Gi"
+    guarantee: "1Gi"
+  storage:
+    type: dynamic
+    homeMountPath: /home/jovyan
+    dynamic:
+      storageClass: standard-rwo
+      pvcNameTemplate: claim-{username}
+      volumeNameTemplate: volume-{username}
+      capacity: 5Gi
+
+cull:
+  enabled: true
+  timeout: 3600  # 1 hour idle timeout
+  every: 300     # Check every 5 minutes
+
+ingress:
+  enabled: true
+  hosts:
+    - your-jupyterhub-domain.com  # TODO: Replace with actual domain
+  tls:
+    - secretName: jupyterhub-tls
+      hosts:
+        - your-jupyterhub-domain.com  # TODO: Replace with actual domain

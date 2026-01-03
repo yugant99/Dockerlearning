@@ -1,0 +1,60 @@
+FROM jupyter/scipy-notebook:latest
+
+USER root
+
+# Install additional data science packages
+RUN pip install --no-cache-dir \
+    pandas \
+    scikit-learn \
+    matplotlib \
+    seaborn \
+    plotly \
+    xgboost \
+    lightgbm \
+    tensorflow \
+    torch \
+    torchvision \
+    google-cloud-bigquery \
+    google-cloud-storage \
+    google-cloud-aiplatform \
+    transformers \
+    datasets \
+    accelerate
+
+# Install system packages for data science
+RUN apt-get update && apt-get install -y \
+    vim \
+    htop \
+    git \
+    curl \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install additional Python packages that might need system dependencies
+RUN pip install --no-cache-dir \
+    opencv-python-headless \
+    Pillow \
+    scikit-image \
+    nltk \
+    spacy
+
+USER jovyan
+
+# Download spacy language model
+RUN python -m spacy download en_core_web_sm
+
+# Set working directory
+WORKDIR /home/jovyan/work
+
+# Create common directories
+RUN mkdir -p /home/jovyan/work/data
+RUN mkdir -p /home/jovyan/work/models
+RUN mkdir -p /home/jovyan/work/notebooks
+
+# Set environment variables for better performance
+ENV OMP_NUM_THREADS=1
+ENV MKL_NUM_THREADS=1
+ENV NUMEXPR_NUM_THREADS=1
+
+# Expose Jupyter port
+EXPOSE 8888
