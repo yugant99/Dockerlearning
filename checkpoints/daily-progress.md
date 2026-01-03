@@ -1,63 +1,65 @@
 # 📊 Daily Progress Tracker
 ## Dodona Data Interview Prep
 
+**Last Updated:** January 2, 2026
+
 ---
 
-## Day 1: Docker Refresh + K8s Fundamentals
-**Date:** ___________
-**Hours Studied:** ___/8
+## Day 1: Docker Refresh + K8s Fundamentals ✅
+**Date:** Completed
+**Hours Studied:** 8/8
 
 ### Checklist
-- [ ] Docker basics refreshed
-- [ ] Understood container vs orchestration
-- [ ] Learned K8s architecture (control plane, worker nodes)
-- [ ] Installed minikube
-- [ ] Deployed first pod
-- [ ] Used kubectl: get, describe, logs, exec
+- [x] Docker basics refreshed
+- [x] Understood container vs orchestration
+- [x] Learned K8s architecture (control plane, worker nodes)
+- [x] Installed minikube
+- [x] Deployed first pod
+- [x] Used kubectl: get, describe, logs, exec
 
 ### Key Learnings
 ```
-1. 
-2. 
-3. 
+1. K8s solves multi-host orchestration, auto-scaling, self-healing
+2. Control Plane (API Server, etcd, Scheduler) vs Worker Nodes (kubelet, kube-proxy)
+3. Pods are smallest deployable unit, Deployments manage pods
 ```
 
 ### Questions to Review
 ```
-1. 
-2. 
+1. What's the difference between Docker and Kubernetes?
+2. What component decides which node a pod runs on? (Scheduler)
 ```
 
-### Confidence Level: ⬜⬜⬜⬜⬜ (1-5)
+### Confidence Level: ✅✅✅✅⬜ (4/5)
 
 ---
 
-## Day 2: Kubernetes Core Concepts
-**Date:** ___________
-**Hours Studied:** ___/8
+## Day 2: Kubernetes Core Concepts ✅
+**Date:** Completed
+**Hours Studied:** 8/8
 
 ### Checklist
-- [ ] Pods deep dive complete
-- [ ] Created Deployment
-- [ ] Scaled a deployment
-- [ ] Exposed service (ClusterIP, NodePort)
-- [ ] Worked with namespaces
-- [ ] Understand labels and selectors
+- [x] Pods deep dive complete
+- [x] Created Deployment
+- [x] Scaled a deployment
+- [x] Exposed service (ClusterIP, NodePort)
+- [x] Worked with namespaces
+- [x] Understand labels and selectors
 
 ### Key Learnings
 ```
-1. 
-2. 
-3. 
+1. Services provide stable endpoints (ClusterIP internal, NodePort external, LoadBalancer cloud)
+2. Labels + Selectors connect Services to Pods
+3. Deployments handle rolling updates with zero downtime
 ```
 
 ### Questions to Review
 ```
-1. 
-2. 
+1. Why use Service instead of Pod IP directly? (Pods ephemeral, Services stable)
+2. RollingUpdate vs Recreate deployment strategy
 ```
 
-### Confidence Level: ⬜⬜⬜⬜⬜ (1-5)
+### Confidence Level: ✅✅✅✅⬜ (4/5)
 
 ---
 
@@ -224,17 +226,22 @@
 
 | Day | Completed | Confidence |
 |-----|-----------|------------|
-| 1   | ⬜        | ⬜/5       |
-| 2   | ⬜        | ⬜/5       |
-| 3   | ⬜        | ⬜/5       |
-| 4   | ⬜        | ⬜/5       |
-| 5   | ⬜        | ⬜/5       |
-| 6   | ⬜        | ⬜/5       |
-| 7   | ⬜        | ⬜/5       |
+| 1   | ✅        | 4/5        |
+| 2   | ✅        | 4/5        |
+| 3   | ✅        | 4/5        |
+| 4   | ✅        | 3/5        |
+| 5   | ✅        | 4/5        |
+| 6   | ✅        | 4/5        |
+| 7   | 🔄        | -/5        |
 
-**Overall Readiness:** ⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜ (1-10)
+**Overall Readiness:** ✅✅✅✅✅✅✅⬜⬜⬜ (7/10)
+
+**Next Steps:**
+- [ ] Deploy ML platform to actual GKE cluster
+- [ ] Practice JupyterHub on GKE
+- [ ] Mock interview practice
 
 ---
 
-*You've got this! 💪*
+*9 days to interview - You've got this! 💪*
 
