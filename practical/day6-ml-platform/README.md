@@ -455,3 +455,5 @@ day6-ml-platform/
 
 **Next Steps:** Read theory/06-jobs-cronjobs.md and theory/08-ml-on-kubernetes.md for deep understanding!
 
+*Last updated: January 7, 2026*
+
